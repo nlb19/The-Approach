@@ -13,7 +13,7 @@ export const MainPage = ({children, title}: MainPageLayoutProps) => {
     <>
         <Helmet helmetData={helmetData} title={title ? `${title} | The Approach` : undefined} defaultTitle="The Approach"/>
         <Header />
-        <div className="h-screen bg-white dark:bg-charcoal w-full mt-16 md:mt-24 transition-colors duration-500">
+        <div className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-6rem)] bg-white dark:bg-charcoal w-screen mt-16 md:mt-24 transition-colors duration-500 p-2 md:p-8">
             { children }
         </div>
     </>

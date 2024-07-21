@@ -72,10 +72,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"id":        userFound.ID,
+		"firstName": userFound.FirstName,
+		"lastName":  userFound.LastName,
+		"email":     userFound.Email,
+		"token":     token,
+	})
 }
 
 func GetUserProfile(c *gin.Context) {
-	user, _ := c.Get("currUser")
+	user, _ := c.Get("currentUser")
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }

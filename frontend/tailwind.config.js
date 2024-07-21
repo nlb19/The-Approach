@@ -15,6 +15,7 @@ export default {
         'dark-blue': '#292D37',
         'purple': '#312835',
         'charcoal': '#171717',
+        'error': '#ED4337',
       },
       fontFamily: {
         'mokoko': ["mokoko-variable", 'sans-serif'],

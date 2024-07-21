@@ -1,11 +1,11 @@
-import React from 'react'
 import { MainPage } from '../../components/layouts/MainPage'
 
 
 export const Landing = () => {
+  
   return (
     <MainPage title="Landing">
-      <div>Landing</div>
+      <h1 className="font-roca text-2xl text-dark-green dark:text-light-blue font-black uppercase">Landing</h1>
     </MainPage>
   )
 }

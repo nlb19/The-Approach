@@ -65,6 +65,8 @@ func CheckAuth(c *gin.Context) {
 		return
 	}
 
+	print(user.FirstName)
+
 	c.Set("currentUser", user)
 
 	c.Next()

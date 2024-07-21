@@ -7,6 +7,10 @@ import {
 } from "react-router-dom";
 import { Provider } from './Provider'
 
+import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -38,10 +42,15 @@ const router = createBrowserRouter([
 
 
 function App() {
+  const { user, login, logout, setUser } = useAuth();
   return (
-    <Provider>
-      <RouterProvider router={router} />
-    </Provider>
+    <AuthContext.Provider value={{user,setUser}}>
+      <Provider>
+        <RouterProvider router={router} />
+      </Provider>
+    </AuthContext.Provider>
+      
+    
   )
 };
 

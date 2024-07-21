@@ -16,6 +16,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+#root{
+  min-height:100vh;
+  overflow:none;
+  width:100%;
+}
 
 a {
   font-weight: 500;
