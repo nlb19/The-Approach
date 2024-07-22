@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   Link,
+  Navigate,
 } from "react-router-dom";
 import { Provider } from './Provider'
-
-import { AuthContext } from "../context/AuthContext";
+import { ProviderProps } from '../types/ProviderProps';
+import { AuthProvider } from "../context/AuthContext";
 import { useAuth } from "../hooks/useAuth";
+import ProfileInit from './routes/ProfileInit';
 
+function PrivateRoute({ children }: ProviderProps ) {
+  const{ user } = useAuth();
+  return user ? children : <Navigate to='/auth/login'/>;
+};
 
 const router = createBrowserRouter([
   {
@@ -21,7 +27,7 @@ const router = createBrowserRouter([
   },{
     path: '/auth/register',
     lazy: async () => {
-      const  { Register }  = await import('./routes/auth/Register');
+      const { Register } = await import('./routes/auth/Register');
       return { Component: Register };
     },
   },
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
       const  { Login }  = await import('./routes/auth/Login');
       return { Component: Login };
     },
+  },
+  {
+    path: '/profile-info',
+    element: <PrivateRoute><ProfileInit /></PrivateRoute>,
   },{
     path: '*',
     lazy: async () => {
@@ -42,15 +52,12 @@ const router = createBrowserRouter([
 
 
 function App() {
-  const { user, login, logout, setUser } = useAuth();
   return (
-    <AuthContext.Provider value={{user,setUser}}>
+    <AuthProvider>
       <Provider>
         <RouterProvider router={router} />
       </Provider>
-    </AuthContext.Provider>
-      
-    
+    </AuthProvider>
   )
 };
 

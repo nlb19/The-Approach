@@ -1,63 +1,47 @@
-import { useState, useContext } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import  { LoginInputs }  from '../types/AuthTypes';
-import { LoginApi } from '../api/AuthApi';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
-import { User } from '../../../types/User';
+import { useLogin } from '../../../hooks/useLogin';
+import { FormInput } from '../../../components/ui/FormInput';
 
 
 const LoginForm = () => {
-  const { 
-    register, 
-    handleSubmit,
-    setError,
-    formState:{errors} 
-  } = useForm<LoginInputs>();
+  const { login, error, isLoading } = useLogin();
+  
+  const [input, setInput] = useState<LoginInputs>({
+    email: '',
+    password: ''
+  });
 
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const onSubmit: SubmitHandler<LoginInputs> = async input => {
-    setLoading(true);
-    setError('root', {message: ''});
-    const user = await LoginApi(input)
-
-    if (user instanceof Error) {
-      setError('root', {message: 'Invalid Credentials'});
-      setLoading(false);
-      return;
-    } else{
-      login(user as User);
-      navigate('/');
-      window.location.reload();
+  useEffect(() => {
+    if (error) {
+      setInput({
+        email: '',
+        password: ''
+      })
     }
+  }, [error]);
+  const handleChange = (e:any) => {
+    setInput({
+      ...input,
+      [e.target.id]: e.target.value
+    });
+  };
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+    login(input);
     
-
-  }
-
+  };
   return (
-    <form className="font-new-science font-bold"onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input className="bg-tan dark:bg-purple" type="email" id="email" {...register('email', { required: "Email Address is required" })} aria-invalid={errors.email ? true : false}/>
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input className="bg-tan dark:bg-purple" type="password" id="password" {...register('password')}/>
-      </div>
-      {errors.email && <p className="text-error" role="alert">{errors.email.message}</p>}
-      {errors.root && <p className="text-error" role="alert">{errors.root.message}</p>}
-      <button className="bg-dark-blue dark:bg-light-green" type="submit">
-        {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-        )}
-        Login
-      </button>
+    <form className="font-new-science font-bold w-1/3 m-auto p-8 flex flex-col gap-4"onSubmit={handleSubmit}>
+      <FormInput handleChange={handleChange} value={input.email} label="Email" id="email" type="email" />
+      <FormInput handleChange={handleChange} value={input.password} label="Password" id="password" type="password" />
+      <FormInput value={isLoading ? 'Loading...' : 'Login'} type="submit" id="loginSubmit" disabled={isLoading} />
+
+      {error && <div className="text-error">{error}</div>}
+    
     </form>
     
   )
 }
 
-export default LoginForm
+export default LoginForm;

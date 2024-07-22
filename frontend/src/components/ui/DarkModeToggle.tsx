@@ -11,7 +11,7 @@ const DarkModeToggle = () => {
         } else {
             document.documentElement.classList.remove('dark');
         }
-    });
+    },[darkMode]);
     return (
         <div className="rounded-full bg-white dark:bg-charcoal w-14 h-8 flex items-center justify-center" onClick={() => {setDarkMode(!darkMode)}}>
             <div className="darkModeToggle h-6 relative w-12 flex items-center justify-start m-auto">

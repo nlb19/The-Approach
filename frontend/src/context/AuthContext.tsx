@@ -1,12 +1,37 @@
-import { createContext } from 'react';
-import { User } from '../types/User';
+import { createContext, useReducer, useEffect } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
-interface AuthContext {
-    user: User | null;
-    setUser: (user: User | null) => void;
-}
+export const AuthContext = createContext<any | null>(null);
 
-export const AuthContext = createContext<AuthContext>({
-    user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") as string) : null,
-    setUser: () => {}
-});
+export const authReducer = (state: any, action: any) => {
+    switch (action.type) {
+        case "LOGIN":
+            return { user: action.payload };
+        case "LOGOUT":
+            return { user: null, token: null };
+        default:
+            return state;
+    }
+};
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const [state, dispatch] = useReducer(authReducer, { user: null});
+    const { getItem, removeItem } = useLocalStorage();
+
+    useEffect(() => {
+        const token = getItem('jwt');
+        const user = getItem('user');
+        if (token && user) {
+            dispatch({ type: "LOGIN", payload: JSON.parse(user) });
+        } else{
+            removeItem('jwt');
+            removeItem('user');
+        }
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ ...state, dispatch }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

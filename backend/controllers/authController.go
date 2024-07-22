@@ -13,7 +13,7 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	var authInput models.AuthInput
+	var authInput models.RegisterInput
 
 	if err := c.ShouldBindJSON(&authInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -24,7 +24,7 @@ func CreateUser(c *gin.Context) {
 	initializers.DB.Where("email = ?", authInput.Email).First(&userFound)
 
 	if userFound.ID != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "User already exists"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User with that email already exists"})
 		return
 	}
 
@@ -35,13 +35,32 @@ func CreateUser(c *gin.Context) {
 	}
 
 	user := models.User{
-		Email:    authInput.Email,
-		Password: string(passwordHash),
+		Email:     authInput.Email,
+		Password:  string(passwordHash),
+		FirstName: authInput.FirstName,
+		LastName:  authInput.LastName,
 	}
 
 	initializers.DB.Create(&user)
 
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	initializers.DB.Where("email = ?", authInput.Email).Find(&userFound)
+	generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":  userFound.ID,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+	})
+	token, err := generateToken.SignedString([]byte(os.Getenv("SECRET")))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"id":        user.ID,
+		"firstName": user.FirstName,
+		"lastName":  user.LastName,
+		"email":     user.Email,
+		"token":     token,
+	})
 }
 
 func Login(c *gin.Context) {

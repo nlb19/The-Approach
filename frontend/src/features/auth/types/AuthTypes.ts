@@ -8,6 +8,7 @@ export type RegisterInputs = {
     password: string;
     firstName: string;
     lastName: string;
+    confirmPassword: string;
 }
 
 export type User = {

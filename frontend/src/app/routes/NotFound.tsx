@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { MainPage } from '../../components/layouts/MainPage'
 
 export const NotFound = () => {

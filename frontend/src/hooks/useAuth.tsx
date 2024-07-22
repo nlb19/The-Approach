@@ -1,28 +1,9 @@
-import { useEffect } from 'react';
-import { useUser } from './useUser';
+import { useEffect, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { useLocalStorage } from './useLocalStorage';
-import { User } from './useUser';
 
-export const useAuth = () => {
-    const { user, addUser, removeUser, setUser } = useUser();
-    const { getItem } = useLocalStorage();
+export const useAuth: any = () => {
+    const context = useContext(AuthContext);
 
-    useEffect(() => {
-        const user = getItem("user");
-        if (user) {
-            addUser(JSON.parse(user));
-        }
-    }, [addUser, getItem]);
-
-    const login = (user: User) => {
-        
-        addUser(user);
-    };
-
-    const logout = () => {
-        removeUser();
-        window.location.reload();
-    };
-
-    return { user, login, logout, setUser};
+    return context;
 };

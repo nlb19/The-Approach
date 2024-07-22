@@ -1,10 +1,7 @@
 import React from 'react'
 import { ErrorBoundary } from 'react-error-boundary';
 import { MainError } from '../components/errors/MainError';
-
-type ProviderProps ={
-    children: React.ReactNode;
-};
+import { ProviderProps } from '../types/ProviderProps';
 
 export const Provider = ({ children }: ProviderProps) => {
   return (
@@ -13,7 +10,6 @@ export const Provider = ({ children }: ProviderProps) => {
           <div className={"min-h-screen text-charcoal dark:text-white overflow-hidden"}>
             { children }
           </div>
-          
       </ErrorBoundary>
     
   )

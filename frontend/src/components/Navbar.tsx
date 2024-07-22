@@ -2,26 +2,35 @@ import React from 'react'
 import { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { useLogout } from '../hooks/useLogout'
 import DarkModeToggle  from './ui/DarkModeToggle'
 
 const Navbar = () => {
+    const { logout } = useLogout();
+    const { user } = useAuth();
+    
+    const handleClick = () => {
+        logout();
+    }
 
-    const { user, logout } = useAuth();
     return (
         <nav className="the-approach__nav h-16 md:h-24 w-screen bg-dark-green dark:bg-light-blue fixed top-0 px-4 md:px-8 flex gap-4 z-10">
             <div className="nav__left w-1/4 md:w-1/3 flex gap-8 items-center">
-                {user && (
+            
                     <div className="nav__profile-container flex justify-center items-center gap-4">
-                        <p className="text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">{user.email}</p>
-                        <button onClick={() => logout()} className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Logout</button>
-                    </div>
-                )}
-                {!user && (
-                    <div className="nav__profile-container flex justify-center itmes-center text gap-12">
-                        <NavLink to="/auth/register" className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Register</NavLink>
-                        <NavLink to="/auth/login" className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Login</NavLink>
-                    </div>  
-                )}
+                        {user?
+                            <>
+                                <p className="text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">{user.email}</p>
+                                <button onClick={handleClick} className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Logout</button>
+                            </>
+                            :
+                            <>
+                                <NavLink to="/auth/register" className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Register</NavLink>
+                                <NavLink to="/auth/login" className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">Login</NavLink>
+                            </>
+                        }
+                    </div> 
+              
                 
             </div>
             <div className="nav__center w-1/2 md:w-1/3">
