@@ -1,0 +1,60 @@
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
+import ProfileInit from './routes/ProfileInit';
+import Login from './routes/auth/Login';
+import Register from './routes/auth/Register';
+
+import { ProviderProps } from '../types/ProviderProps';
+import { useAuth } from "../hooks/useAuth";
+
+function NewUserRoute({ children }: ProviderProps ) {
+    const { user, loading } = useAuth();
+    console.log("NEW USER ROUTE: ", user, "\nLOADING: ", loading);
+    if(loading) {
+        return <div>Loading...</div>
+    }
+    return user ? <Navigate to='/'/> : children;
+};
+function PrivateRoute({ children }: ProviderProps ) {
+  const { user, loading } = useAuth();
+  console.log("PRIVATE: ", user, "\nLOADING: ", loading);
+  if(loading) {
+    return <div>Loading...</div>
+  }
+  return user ? children : <Navigate to='/auth/login'/>;
+};
+const router = createBrowserRouter([
+  {
+    path: '/',
+    lazy: async () => {
+      const { Landing } = await import('./routes/Landing');
+      return { Component: Landing };
+    },
+  },
+  {
+    path: '/auth/register',
+    element: <NewUserRoute><Register /></NewUserRoute>
+  },
+  {
+    path: '/auth/login',
+    element: <NewUserRoute><Login /></NewUserRoute>
+  },
+  {
+    path: '/profile-info',
+    element: <PrivateRoute><ProfileInit /></PrivateRoute>,
+  },
+  {
+    path: '*',
+    lazy: async () => {
+      const { NotFound } = await import('./routes/NotFound');
+      return { Component: NotFound };
+    },
+  },
+]);
+
+export const Router = () => {
+    return <RouterProvider router={router} />
+}

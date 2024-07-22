@@ -1,5 +1,3 @@
-import React from 'react'
-import { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useLogout } from '../hooks/useLogout'
@@ -8,7 +6,6 @@ import DarkModeToggle  from './ui/DarkModeToggle'
 const Navbar = () => {
     const { logout } = useLogout();
     const { user } = useAuth();
-    
     const handleClick = () => {
         logout();
     }

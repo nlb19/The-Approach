@@ -13,8 +13,10 @@ export default {
         'tan': '#BEAF9D',
         'light-green': '#97B69B',
         'dark-blue': '#292D37',
-        'purple': '#312835',
+        'purple': '#392e3a',
         'charcoal': '#171717',
+        "dark-charcoal": '#121212',
+        "light-gray": '#F3F3F3',
         'error': '#ED4337',
       },
       fontFamily: {

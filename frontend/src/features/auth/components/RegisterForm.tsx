@@ -1,12 +1,11 @@
-import React,{ useState, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import  { RegisterInputs }  from '../types/AuthTypes';
-import { RegisterApi } from '../api/AuthApi';
-import { useRegister } from '../../../hooks/useRegister';
-
+import { useRegister } from '../hooks/useRegister';
+import { FormInput } from '../../../components/ui/FormInput';
 
 const RegisterForm = () => {
   const { register, error, isLoading } = useRegister();
-  
+
   const [input, setInput] = useState<RegisterInputs>({
     email: '',
     firstName: '',
@@ -26,65 +25,15 @@ const RegisterForm = () => {
     await register(input);
   };
   return (
-    <form className="font-new-science font-bold" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input 
-          onChange={handleChange}
-          value={input.email}
-          className="bg-tan dark:bg-purple" 
-          type="email" 
-          id="email"
-        />
-      </div>
-      <div>
-        <label htmlFor="firstName">First Name</label>
-        <input 
-          onChange={handleChange}
-          value={input.firstName}
-          className="bg-tan dark:bg-purple" 
-          type="text" 
-          id="firstName"
-        />
-      </div>
-      <div>
-        <label htmlFor="lastName">Last Name</label>
-        <input 
-          onChange={handleChange}
-          value={input.lastName}
-          className="bg-tan dark:bg-purple" 
-          type="text" 
-          id="lastName"
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input 
-          onChange={handleChange} 
-          value={input.password}
-          className="bg-tan dark:bg-purple" 
-          type="password" id="password"
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Confirm Password</label>
-        <input 
-          onChange={handleChange} 
-          value={input.confirmPassword}
-          className="bg-tan dark:bg-purple" 
-          type="password" id="confirmPassword"
-        />
-      </div>
-      <button 
-        className="bg-dark-blue dark:bg-light-green" 
-        type="submit"
-        disabled={isLoading}
-      >
-        Login
-      </button>
-      {error && <div>{error}</div>}
-    </form>
-    
+      <form className={"font-new-science font-bold max-w-screen-md lg:w-1/2 m-auto p-8 flex flex-col gap-4 rounded-xl bg-light-gray dark:bg-dark-charcoal mt-2 " + (error && "border-2 border-error")} onSubmit={handleSubmit}>
+        <FormInput handleChange={handleChange} value={input.email} label="Email" id="email" type="email" />
+        <FormInput handleChange={handleChange} value={input.firstName} label="First Name" id="firstName" type="text" />
+        <FormInput handleChange={handleChange} value={input.lastName} label="Last Name" id="lastName" type="text" />
+        <FormInput handleChange={handleChange} label="Password" id="password" type="password" />
+        <FormInput handleChange={handleChange} label="Confirm Password" id="confirmPassword" type="password" />
+        <FormInput value={isLoading ? 'Loading' : 'Register'}  type="submit" id="loginSubmit" disabled={isLoading} />
+        {error && <div className="text-error">{error}</div>}
+      </form>
   )
 }
 
