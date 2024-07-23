@@ -34,6 +34,7 @@ func main() {
 	r.POST("/auth/signup", controllers.CreateUser)
 	r.POST("/auth/login", controllers.Login)
 	r.GET("/auth/profile", middlewares.CheckAuth, controllers.GetUserProfile)
+	r.POST("/profileInit", middlewares.CheckAuth, controllers.InitializeProfile)
 
 	r.Run()
 }

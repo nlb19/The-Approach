@@ -12,7 +12,6 @@ import { useAuth } from "../hooks/useAuth";
 
 function NewUserRoute({ children }: ProviderProps ) {
     const { user, loading } = useAuth();
-    console.log("NEW USER ROUTE: ", user, "\nLOADING: ", loading);
     if(loading) {
         return <div>Loading...</div>
     }
@@ -20,7 +19,6 @@ function NewUserRoute({ children }: ProviderProps ) {
 };
 function PrivateRoute({ children }: ProviderProps ) {
   const { user, loading } = useAuth();
-  console.log("PRIVATE: ", user, "\nLOADING: ", loading);
   if(loading) {
     return <div>Loading...</div>
   }

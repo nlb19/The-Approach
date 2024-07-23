@@ -4,7 +4,7 @@ export const FormInput = ({ label, id, type, value, handleChange, disabled, opti
     let styles:string = "";
     switch (type) {
         case "submit":
-            styles = "bg-dark-blue dark:bg-light-green text-white dark:text-dark-green font-black text-lg py-2 lg:w-1/3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple leading-loose rounded-full";
+            styles = "bg-dark-blue dark:bg-light-green text-white dark:text-dark-green font-black text-lg py-2 lg:w-1/3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple leading-loose rounded-full hover:cursor-pointer";
             break;
         default:
             styles = "bg-tan dark:bg-purple pl-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal dark:focus-visible:ring-white leading-normal py-2 rounded";
