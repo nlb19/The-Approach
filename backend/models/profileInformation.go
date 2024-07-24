@@ -6,7 +6,13 @@ type ProfileInformation struct {
 }
 
 type ProfileInformationInput struct {
-	DOB        string `json:"dob"`
-	Location   string `json:"location"`
-	Discipline string `json:"discipline"`
+	DOB            string `json:"dob"`
+	Location       string `json:"location"`
+	Discipline     string `json:"discipline"`
+	HardestRoute   string `json:"hardestRoute"`
+	HardestBoulder string `json:"hardestBoulder"`
+	Height         string `json:"height"`
+	Weight         string `json:"weight"`
+	ApeIndex       string `json:"apeIndex"`
+	Experience     string `json:"experience"`
 }

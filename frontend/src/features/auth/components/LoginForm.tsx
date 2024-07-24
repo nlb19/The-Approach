@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import  { LoginInputs }  from '../types/AuthTypes';
 import { useLogin } from '../hooks/useLogin';
-import { FormInput } from '../../../components/ui/FormInput';
+import { TextInput, SubmitInput } from '../../../components/ui/FormInput';
 import { FormWrapper } from '../../../components/ui/FormWrapper';
 
 
@@ -34,9 +34,9 @@ const LoginForm = () => {
   };
   return (
     <FormWrapper error={error} handleSubmit={handleSubmit}>
-      <FormInput handleChange={handleChange} label="Email" id="email" type="email" />
-      <FormInput handleChange={handleChange} label="Password" id="password" type="password" />
-      <FormInput value={isLoading ? 'Loading...' : 'Login'} type="submit" id="loginSubmit" disabled={isLoading} />
+      <TextInput handleChange={handleChange} label="Email" id="email" type="email" />
+      <TextInput handleChange={handleChange} label="Password" id="password" type="password" />
+      <SubmitInput value={isLoading ? 'Loading...' : 'Login'} id="loginSubmit" disabled={isLoading} />
 
       {error && <div className="text-error">{error}</div>}
     
