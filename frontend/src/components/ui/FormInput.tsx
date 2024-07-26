@@ -5,7 +5,7 @@ import {
     RangeInputProps 
 } from '../../types/FormProps';
 
-export const TextInput = ({ label, id, value, handleChange,type, disabled, inputStyles, labelStyles = "" }: TextInputProps) => {
+export const TextInput = ({ label, id, currentValue, handleChange,type, disabled, inputStyles, labelStyles = "" }: TextInputProps) => {
     const styles:string = "bg-tan dark:bg-purple pl-2  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal dark:focus-visible:ring-white leading-normal py-2 rounded ";
 
     return (
@@ -15,7 +15,7 @@ export const TextInput = ({ label, id, value, handleChange,type, disabled, input
             }
             <input
                 onChange={handleChange}
-                value={value}
+                value={currentValue}
                 className={styles + " " + inputStyles}
                 type={type ? type : "text"}
                 id={id}
@@ -44,7 +44,7 @@ export const SubmitInput = ({ label, id, value,  disabled, inputStyles = "" }: S
     )
 };
 
-export const RadioInput = ({ label, id, value, disabled, inputStyles = "", options, handleChange, name, selected }: RadioInputProps) => {
+export const RadioInput = ({ label, id, disabled, inputStyles = "", options, handleChange, name, selected }: RadioInputProps) => {
     const styles:string = "mr-2";
 
     return (
@@ -65,6 +65,7 @@ export const RadioInput = ({ label, id, value, disabled, inputStyles = "", optio
                                 disabled={disabled}
                                 name={name}
                                 onChange={handleChange}
+                                checked={option === selected}
                             />
                             {option}</label>
                         </div>
@@ -76,7 +77,7 @@ export const RadioInput = ({ label, id, value, disabled, inputStyles = "", optio
     )
 };
 
-export const RangeInput = ({ label, id, handleChange,type, inputStyles, labelStyles = "", min, max, step, currentValueString, currentValue, subLabel }: RangeInputProps) => {
+export const RangeInput = ({ label, id, handleChange, type, inputStyles, labelStyles = "", min, max, step, currentValueString, currentValue, subLabel }: RangeInputProps) => {
     const styles:string = "w-full";
 
     return (

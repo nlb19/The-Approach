@@ -3,7 +3,8 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import ProfileInit from './routes/ProfileInit';
+import ProfileInit from './routes/profile/ProfileInit';
+import Profile from './routes/profile/Profile';
 import Login from './routes/auth/Login';
 import Register from './routes/auth/Register';
 
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: '/profile-info',
     element: <PrivateRoute><ProfileInit /></PrivateRoute>,
+  },
+  {
+    path: '/profile',
+    element: <PrivateRoute><Profile /></PrivateRoute>,
   },
   {
     path: '*',

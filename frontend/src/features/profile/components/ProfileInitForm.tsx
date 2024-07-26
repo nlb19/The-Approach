@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FormWrapper } from "../../../components/ui/FormWrapper";
 import { SubmitInput, 
     TextInput, 
@@ -7,28 +7,12 @@ import { SubmitInput,
 } from "../../../components/ui/FormInput";
 import { useInitializeProfile } from "../hooks/useInitializeProfile";
 import { boulderGradeMapHueco, routeGradeMapYDS } from "../../../utils/conversions";
+import { ProfileOptionsInput } from "../types/ProfileTypes";
 
 
 export const ProfileInitForm = () => {
-    const { initProfile, isLoading, error } = useInitializeProfile();
-
+    const { submitProfile, isLoading, error } = useInitializeProfile();
     const disciplineOptions = ["Bouldering", "Sport Climbing", "Trad Climbing", "Other"];
-    
-
-    
-    type ProfileOptionsInput = {
-        dob: string;
-        location: string;
-        discipline: string;
-        hardestBoulder: number;
-        hardestRoute: number;
-        height:number;
-        weight:number;
-        maxHang: number;
-        maxPull: number;
-        experience:string
-    }
-    const date = new Date();
     const [input, setInput] = useState<ProfileOptionsInput>({
         dob: "",
         location: "",
@@ -39,30 +23,33 @@ export const ProfileInitForm = () => {
         weight: 0,
         maxHang: 60,
         maxPull: 60,
-        experience: (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()),
+        experience: "",
+        favLocation: "",
     });
+    
 
     const [boulderingGrade, setBoulderingGrade] = useState<string>("N/A");
     const [routeGrade, setRouteGrade] = useState<string>("N/A");
 
     const handleChange = (e: any) => {
+        const { id, value } = e.target;
         if(e.target.id === "hardestBoulder") {
             setBoulderingGrade(boulderGradeMapHueco.get(parseInt(e.target.value)) as string);
         }
         if(e.target.id === "hardestRoute") {
             setRouteGrade(routeGradeMapYDS.get(parseInt(e.target.value)) as string);
         }
-        setInput({
-            ...input,
-            [e.target.id]: e.target.value
-        });
+        setInput((prevInput) => ({
+            ...prevInput,
+            [id]: value,
+        }));
     };
     const handleSubmit = async (e:any) => {
         if(input.discipline === "Other") {
             input.discipline = (document.getElementById("discipline--other") as HTMLInputElement).value;
         }
         e.preventDefault();
-        await initProfile(input);
+        await submitProfile(input);
     };
     return (
         <FormWrapper error={error} handleSubmit={handleSubmit}>
@@ -72,11 +59,13 @@ export const ProfileInitForm = () => {
                 id="dob" 
                 type="date" 
                 handleChange={handleChange} 
+                disabled={isLoading}
             />
             <TextInput 
                 label="Location" 
                 id="location" 
                 handleChange={handleChange} 
+                disabled={isLoading}
             />
             <div className="flex gap-8">
                 <TextInput 
@@ -85,6 +74,7 @@ export const ProfileInitForm = () => {
                     id="height" 
                     handleChange={handleChange} 
                     inputStyles="w-24 md:w-28"
+                    disabled={isLoading}
                 />
                 <TextInput 
                     type="number" 
@@ -92,13 +82,22 @@ export const ProfileInitForm = () => {
                     id="weight" 
                     handleChange={handleChange} 
                     inputStyles="w-24 md:w-28"
+                    disabled={isLoading}
                 />
             </div>
             <TextInput 
                 label="When did you start climbing?" 
                 id="experience"
                 type="date" 
-                handleChange={handleChange} 
+                handleChange={handleChange}
+                disabled={isLoading}
+            />
+            <TextInput 
+                label="Favorite crag or gym?" 
+                id="favLocation"
+                type="text" 
+                handleChange={handleChange}
+                disabled={isLoading}
             />
             <RadioInput 
                 label="Favorite Discipline" id="discipline" 
@@ -106,6 +105,8 @@ export const ProfileInitForm = () => {
                 options={disciplineOptions} 
                 handleChange={handleChange} 
                 selected={input.discipline}
+                currentValue={input.discipline}
+                disabled={isLoading}
             />
             <RangeInput 
                 label="Hardest Boulder Climbed" 
@@ -114,7 +115,8 @@ export const ProfileInitForm = () => {
                 max={18} 
                 step={1} 
                 currentValue={input.hardestBoulder} 
-                currentValueString={boulderingGrade} 
+                currentValueString={boulderingGrade}
+                disabled={isLoading} 
             />
             <RangeInput 
                 label="Hardest Route Climbed" 
@@ -123,7 +125,8 @@ export const ProfileInitForm = () => {
                 max={28} 
                 step={1} 
                 currentValue={input.hardestRoute} 
-                currentValueString={routeGrade} 
+                currentValueString={routeGrade}
+                disabled={isLoading}
             />           
             <RangeInput 
                 label="Max Hang" 
@@ -134,7 +137,8 @@ export const ProfileInitForm = () => {
                 max={220} 
                 step={5} 
                 currentValue={input.maxHang}
-                currentValueString={input.maxHang == 60 ? "N/A" : (input.maxHang.toString() + "% Bodyweight")} 
+                currentValueString={input.maxHang == 60 ? "N/A" : (input.maxHang.toString() + "% Bodyweight")}
+                disabled={isLoading}
             />
             <RangeInput 
                 label="Max Pull-Up" 
@@ -145,7 +149,8 @@ export const ProfileInitForm = () => {
                 max={220} 
                 step={5} 
                 currentValue={input.maxPull} 
-                currentValueString={input.maxPull == 60 ? "N/A" : (input.maxPull.toString() + "% Bodyweight")} 
+                currentValueString={input.maxPull == 60 ? "N/A" : (input.maxPull.toString() + "% Bodyweight")}
+                disabled={isLoading} 
             />
 
             <SubmitInput 

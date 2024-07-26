@@ -54,9 +54,10 @@ export const useRegister = () => {
                 navigate('/profile-info');
             }
         } catch (error) {
-            console.log("error", error);
+           
             if(axios.isAxiosError(error)){
-                setError(error.message);
+                const message :string = error.response ? error.response.data.error : 'An error occurred. Please try again later';
+                setError(message);
             }
             else{
                 setError('An error occurred. Please try again later');

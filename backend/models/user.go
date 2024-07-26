@@ -1,9 +1,27 @@
 package models
 
 type User struct {
-	ID        uint   `json:"id" gorm:"primary_key"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email" gorm:"unique"`
-	Password  string `json:"password"`
+	FirstName          string                  `json:"first_name"`
+	LastName           string                  `json:"last_name"`
+	Email              string                  `json:"email"`
+	Password           string                  `json:"password"`
+	ProfileInformation ProfileInformationInput `json:"profileInformation"`
+}
+type ProfileInformation struct {
+	Email              string                  `json:"email"`
+	ProfileInformation ProfileInformationInput `json:"profileInformation"`
+}
+
+type ProfileInformationInput struct {
+	DOB            string `json:"dob"`
+	Location       string `json:"location"`
+	Discipline     string `json:"discipline"`
+	HardestRoute   string `json:"hardestRoute"`
+	HardestBoulder string `json:"hardestBoulder"`
+	Height         string `json:"height"`
+	Weight         string `json:"weight"`
+	MaxHang        string `json:"maxHang"`
+	MaxPull        string `json:"maxPull"`
+	Experience     string `json:"experience"`
+	FavLocation    string `json:"favLocation"`
 }

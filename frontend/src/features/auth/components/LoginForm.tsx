@@ -3,6 +3,7 @@ import  { LoginInputs }  from '../types/AuthTypes';
 import { useLogin } from '../hooks/useLogin';
 import { TextInput, SubmitInput } from '../../../components/ui/FormInput';
 import { FormWrapper } from '../../../components/ui/FormWrapper';
+import { Link } from 'react-router-dom'
 
 
 const LoginForm = () => {
@@ -34,6 +35,7 @@ const LoginForm = () => {
   };
   return (
     <FormWrapper error={error} handleSubmit={handleSubmit}>
+      <h1 className="text-2xl font-bold leading-none">Login<br></br><span className="text-sm text-gray-500 leading-tight">If you don't have an account yet, <Link to="/auth/login" className="underline font-italic font-bold leading-tight hover:text-charcoal text-charcoal">register</Link></span></h1>
       <TextInput handleChange={handleChange} label="Email" id="email" type="email" />
       <TextInput handleChange={handleChange} label="Password" id="password" type="password" />
       <SubmitInput value={isLoading ? 'Loading...' : 'Login'} id="loginSubmit" disabled={isLoading} />

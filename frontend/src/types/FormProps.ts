@@ -1,11 +1,11 @@
 export type TextInputProps = {
     label?: string;
     id: string;
-    value?: string;
     type?: string;
     disabled?: boolean;
     handleChange?: (e: any) => void;
     inputStyles?: string;
+    currentValue?: any;
     labelStyles?: string;
 };
 
@@ -25,6 +25,7 @@ export type RadioInputProps = {
     options: string[];
     handleChange?: (e: any) => void;
     name: string;
+    currentValue?: string;
     selected?: string;
 };
 

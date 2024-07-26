@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func CheckAuth(c *gin.Context) {
@@ -56,14 +57,16 @@ func CheckAuth(c *gin.Context) {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
-
-	var user models.User
-	initializers.DB.Where("ID=?", claims["id"]).Find(&user)
-
-	if user.ID == 0 {
-		c.AbortWithStatus(http.StatusUnauthorized)
+	client, err := initializers.ConnectDatabase()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	users := client.Database("the-approach").Collection("users")
+	var user models.User
+
+	users.FindOne(c, bson.D{{"email", claims["email"]}}).Decode(&user)
 
 	c.Set("currentUser", user)
 
