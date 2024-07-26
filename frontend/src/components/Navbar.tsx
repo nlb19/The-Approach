@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useLogout } from '../hooks/useLogout'
 import DarkModeToggle  from './ui/DarkModeToggle'
+import { MobileDrawer } from './ui/MobileDrawer'
 
 const Navbar = () => {
     const { logout } = useLogout();
@@ -14,7 +15,7 @@ const Navbar = () => {
         <nav className="the-approach__nav h-16 md:h-24 w-screen bg-dark-green dark:bg-light-blue fixed top-0 px-4 md:px-8 flex gap-4 z-10">
             <div className="nav__left w-1/4 md:w-1/3 flex gap-8 items-center">
             
-                    <div className="nav__profile-container flex justify-center items-center gap-8">
+                    <div className="nav__profile-container justify-center items-center gap-8 hidden md:flex">
                         {user?
                             <>
                                 <NavLink to="/profile" className="nav__button hover:text-tan dark:hover:text-purple text-center text-white dark:text-charcoal font-new-science font-bold text-lg md:text-xl">
@@ -33,7 +34,7 @@ const Navbar = () => {
                             </>
                         }
                     </div> 
-              
+                    <MobileDrawer />
                 
             </div>
             <div className="nav__center w-1/2 md:w-1/3">
