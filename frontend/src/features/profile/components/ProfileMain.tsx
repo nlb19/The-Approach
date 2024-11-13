@@ -12,16 +12,13 @@ export const ProfileMain = () => {
             const profile = await initProfile();
             if(profile) {
                 setProfileInformation(profile);
-                console.log(profile.profileInformation.maxHang);
             }
-        } 
+        }
         loadProfile();
     }, []);
 
     useEffect(() => {
-        if(profileInformation) {
-            console.log(profileInformation.user);
-        }
+
     }, [profileInformation]);
 
     if(isLoading) {
@@ -29,13 +26,12 @@ export const ProfileMain = () => {
     }
     return (
         <div>
-            <h1>{user.firstName} {user.lastName}</h1>
-            <div className="w-3/4 bg-light-gray rounded p-4 flex flex-col">
+            <div className="w-3/4 bg-light-gray rounded p-4 flex flex-col m-auto">
                 {profileInformation ? (
                     <div>
-                        <h2>Profile Information</h2>
+                        <h2>Personal Information</h2>
                         <div>
-                            
+                            <h1 className="font-josefin text-xl md:text-3xl font-bold tracking-tighter">{user.firstName} {user.lastName}</h1>
                             <p>Email: {profileInformation.user.email}</p>
                             <p>Date of Birth: {profileInformation.user.profileInformation.dob}</p>
                             <p>Location: {profileInformation.user.profileInformation.location}</p>
@@ -49,6 +45,7 @@ export const ProfileMain = () => {
                             <p>Climbing Since: {profileInformation.user.profileInformation.experience}</p>
                             <p>Favorite Crag/Gym: {profileInformation.user.profileInformation.favLocation}</p>
                             
+                            "
                         </div>
                     </div>
                 ) : <div>Loading...</div>

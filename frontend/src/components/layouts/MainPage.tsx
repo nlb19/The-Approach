@@ -6,9 +6,10 @@ type MainPageLayoutProps = {
     children: React.ReactNode;
     title: string;
 };
-const helmetData = new HelmetData({});
+
 
 export const MainPage = ({children, title}: MainPageLayoutProps) => {
+  const helmetData = new HelmetData({});
   return (
     <>
         <Helmet helmetData={helmetData} title={title ? `${title} | The Approach` : undefined} defaultTitle="The Approach"/>

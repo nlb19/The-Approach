@@ -6,6 +6,7 @@ type User struct {
 	Email              string                  `json:"email"`
 	Password           string                  `json:"password"`
 	ProfileInformation ProfileInformationInput `json:"profileInformation"`
+	BoardInformation   BoardInformationInput   `json:"boardInformation"`
 }
 type ProfileInformation struct {
 	Email              string                  `json:"email"`
@@ -24,4 +25,10 @@ type ProfileInformationInput struct {
 	MaxPull        string `json:"maxPull"`
 	Experience     string `json:"experience"`
 	FavLocation    string `json:"favLocation"`
+}
+
+type BoardInformationInput struct {
+	TensionBoard     AuroraUser `json:"tensionBoard"`
+	GrasshopperBoard AuroraUser `json:"grasshopperBoard"`
+	KilterBoard      AuroraUser `json:"kilterBoard"`
 }
