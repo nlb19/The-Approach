@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"the-approach/backend/api"
 	"the-approach/backend/initializers"
@@ -45,11 +46,11 @@ func BoardLogin(c *gin.Context) {
 	var updateField string
 	switch auroraInput.Board {
 	case "tensionboardapp2":
-		updateField = "TensionBoard"
+		updateField = "boardInformation.tensionBoard"
 	case "grasshopperboardapp":
-		updateField = "GrassHopperBoard"
+		updateField = "boardInformation.grasshopperBoard"
 	case "kilterboardapp":
-		updateField = "KilterBoard"
+		updateField = "boardInformation.kilterBoard"
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid board type"})
 		return
@@ -70,4 +71,48 @@ func BoardLogin(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, gin.H{"message": "Board information updated successfully"})
+}
+
+func GetAuroraAccounts(c *gin.Context) {
+	user, exists := c.Get("currentUser")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	currentUser, ok := user.(models.User)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user type"})
+		return
+	}
+
+	client, err := initializers.ConnectDatabase()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	users := client.Database("the-approach").Collection("users")
+
+	var userAccounts models.User
+
+	err = users.FindOne(c, bson.D{{"email", currentUser.Email}}).Decode(&userAccounts)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	fmt.Println(userAccounts.BoardInformation)
+	var boardUsers struct {
+		TensionBoard     string `json:"tensionBoard"`
+		GrasshopperBoard string `json:"grasshopperBoard"`
+		KilterBoard      string `json:"kilterBoard"`
+	}
+
+	boardUsers.TensionBoard = userAccounts.BoardInformation.TensionBoard.Username
+	boardUsers.GrasshopperBoard = userAccounts.BoardInformation.GrasshopperBoard.Username
+	boardUsers.KilterBoard = userAccounts.BoardInformation.KilterBoard.Username
+
+	c.JSON(http.StatusOK, boardUsers)
 }

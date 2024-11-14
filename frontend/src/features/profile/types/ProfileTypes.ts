@@ -18,3 +18,9 @@ export type ProfileInformation = {
         profileInformation: ProfileOptionsInput;
     }
 }
+
+export type ConnectedAccounts = {
+    tensionBoard: string,
+    grasshopperBoard: string,
+    kilterBoard:  string
+}

@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useInitializeProfile } from "../hooks/useInitializeProfile";
-import { ProfileInformation } from "../types/ProfileTypes";
+import { useInitializeAurora } from "../hooks/useInitializeAurora";
+import { ProfileInformation, ConnectedAccounts } from "../types/ProfileTypes";
 import { useAuth } from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 
 export const ProfileMain = () => {
     const { initProfile, isLoading, error } = useInitializeProfile();
+    const { initAurora } = useInitializeAurora();
     const [profileInformation, setProfileInformation] = useState<ProfileInformation | null>(null);
+    const [auroraAccounts, setAuroraAccounts] = useState<ConnectedAccounts | null>(null);
     const { user } = useAuth();
     useEffect(() => {
         const loadProfile = async () =>{
@@ -15,22 +18,26 @@ export const ProfileMain = () => {
                 setProfileInformation(profile);
             }
         }
+        const loadAuroraAccounts = async () => {
+            const accounts = await initAurora();
+
+            if(accounts){
+                setAuroraAccounts(accounts);
+            }
+        }
+        loadAuroraAccounts();
         loadProfile();
     }, []);
 
-    useEffect(() => {
-
-    }, [profileInformation]);
 
     if(isLoading) {
         return <div>Loading...</div>
     }
     return (
         <div>
-            <div className="w-3/4 bg-light-gray rounded p-4 flex flex-col m-auto">
+            <div className="w-1/4 bg-light-gray rounded flex flex-col m-auto">
                 {profileInformation ? (
-                    <div>
-                        <h2>Personal Information</h2>
+                    <div className="p-4">
                         <div>
                             <h1 className="font-josefin text-xl md:text-3xl font-bold tracking-tighter">{user.firstName} {user.lastName}</h1>
                             <p>Email: {profileInformation.user.email}</p>
@@ -47,11 +54,31 @@ export const ProfileMain = () => {
                             <p>Favorite Crag/Gym: {profileInformation.user.profileInformation.favLocation}</p>
                             
 
-                            <Link to="/tension-login">Tension Board Sign In</Link>
+                            
                         </div>
                     </div>
                 ) : <div>Loading...</div>
                 }
+                <div className="py-8 w- bg-tan rounded-r-lg px-4 mb-4 mr-8 font-new-science">
+                    <h2 className="font-bold">Connected Accounts</h2>
+                    <div className="flex flex-col mt-2">
+                        {auroraAccounts != null && auroraAccounts.tensionBoard != "" ? (
+                                <div className="flex flex-col gap-1">
+                                    <h3>Tension Board</h3>
+                                    <div className="flex gap-4 items-center font-new-science">
+                                        <p className="w-1/5 bg-white flex justify-center py-2 rounded ">{auroraAccounts.tensionBoard}</p>
+                                        <span className="w-2/5 bg-white flex justify-center py-2 rounded font-bold hover:text-white hover:bg-charcoal hover:cursor-pointer">Disconnect</span>
+                                    </div>
+                                </div>
+                            )
+                            : (<Link to="/tension-login">Tension Board Sign In</Link>)
+                        }
+                        
+                    </div>
+                    
+                </div>
+                
+                
             </div>
             {error ? <div>{error}</div> : null}
         </div>

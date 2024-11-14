@@ -6,6 +6,4 @@ export type AuroraLoginInputs = {
 
 export type AuroraUser = {
     username: string;
-    userID: string;
-    token: string;
 }

@@ -19,7 +19,7 @@ export const useAurora = () => {
             password: input.password
         };
         try{
-            const response = await axios.post('http://localhost:3000/auroraLogin', apiInputs, {
+            const response = await axios.post('http://localhost:3000/aurora/login', apiInputs, {
                 headers: {
                     'Authorization': `Bearer ${getItem('jwt')}`
                 }
@@ -28,14 +28,8 @@ export const useAurora = () => {
             const data = await response.data;
 
             if (response.status === 200) {
-                console.log(data);
-                setItem('aurora', JSON.stringify({
-                    username: data.username,
-                    userID: data.userID,
-                    token: data.token,
-                }));
                 setIsLoading(false);
-                navigate('/');
+                navigate('/profile');
             }
         } catch (error) {
             setError('Invalid username or password');
