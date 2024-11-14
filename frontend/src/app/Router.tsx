@@ -7,6 +7,7 @@ import ProfileInit from './routes/profile/ProfileInit';
 import Profile from './routes/profile/Profile';
 import Login from './routes/auth/Login';
 import Register from './routes/auth/Register';
+import TensionLogin from './routes/aurora/TensionLogin';
 
 import { ProviderProps } from '../types/ProviderProps';
 import { useAuth } from "../hooks/useAuth";
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: '/profile',
     element: <PrivateRoute><Profile /></PrivateRoute>,
+  },
+  {
+    path: '/tension-login',
+    element: <PrivateRoute><TensionLogin /></PrivateRoute>,
   },
   {
     path: '*',

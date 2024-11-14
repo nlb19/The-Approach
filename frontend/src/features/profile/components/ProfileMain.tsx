@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useInitializeProfile } from "../hooks/useInitializeProfile";
 import { ProfileInformation } from "../types/ProfileTypes";
 import { useAuth } from "../../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export const ProfileMain = () => {
     const { initProfile, isLoading, error } = useInitializeProfile();
@@ -45,7 +46,8 @@ export const ProfileMain = () => {
                             <p>Climbing Since: {profileInformation.user.profileInformation.experience}</p>
                             <p>Favorite Crag/Gym: {profileInformation.user.profileInformation.favLocation}</p>
                             
-                            "
+
+                            <Link to="/tension-login">Tension Board Sign In</Link>
                         </div>
                     </div>
                 ) : <div>Loading...</div>

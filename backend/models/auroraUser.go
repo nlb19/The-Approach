@@ -32,7 +32,7 @@ type ApiResponse struct {
 }
 
 type AuroraUser struct {
-	UserName string `json:"userName"`
+	Username string `json:"username"`
 	UserID   int    `json:"userID"`
 	Token    string `json:"token"`
 }

@@ -29,28 +29,45 @@ func BoardLogin(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	user, _ := c.Get("currentUser")
+	user, exists := c.Get("currentUser")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	currentUser, ok := user.(models.User)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user type"})
+		return
+	}
 	users := client.Database("the-approach").Collection("users")
 
+	var updateField string
 	switch auroraInput.Board {
 	case "tensionboardapp2":
-		users.UpdateOne(
-			c,
-			bson.D{{"email", user.(models.User).Email}},
-			bson.D{{"$set", bson.D{{"TensionBoard", auroraUser}}}},
-		)
+		updateField = "TensionBoard"
 	case "grasshopperboardapp":
-		users.UpdateOne(
-			c,
-			bson.D{{"email", user.(models.User).Email}},
-			bson.D{{"$set", bson.D{{"GrassHopperBoard", auroraUser}}}},
-		)
+		updateField = "GrassHopperBoard"
 	case "kilterboardapp":
-		users.UpdateOne(
-			c,
-			bson.D{{"email", user.(models.User).Email}},
-			bson.D{{"$set", bson.D{{"KilterBoard", auroraUser}}}},
-		)
+		updateField = "KilterBoard"
+	default:
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid board type"})
+		return
+	}
+
+	result, err := users.UpdateOne(
+		c,
+		bson.D{{"email", currentUser.Email}},
+		bson.D{{"$set", bson.D{{updateField, auroraUser}}}},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if result.MatchedCount == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
 	}
 
 }
