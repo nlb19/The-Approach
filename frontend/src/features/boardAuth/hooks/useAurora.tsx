@@ -26,6 +26,7 @@ export const useAurora = () => {
             });
 
             const data = await response.data;
+            setItem('aurora', data);
 
             if (response.status === 200) {
                 setIsLoading(false);

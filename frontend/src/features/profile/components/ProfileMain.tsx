@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useInitializeProfile } from "../hooks/useInitializeProfile";
 import { useInitializeAurora } from "../hooks/useInitializeAurora";
+import { useAuroraLogout } from "../hooks/useAuroraLogout";
 import { ProfileInformation, ConnectedAccounts } from "../types/ProfileTypes";
 import { useAuth } from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
@@ -8,6 +9,7 @@ import { Link } from "react-router-dom";
 export const ProfileMain = () => {
     const { initProfile, isLoading, error } = useInitializeProfile();
     const { initAurora } = useInitializeAurora();
+    const { auroraLogout } = useAuroraLogout();
     const [profileInformation, setProfileInformation] = useState<ProfileInformation | null>(null);
     const [auroraAccounts, setAuroraAccounts] = useState<ConnectedAccounts | null>(null);
     const { user } = useAuth();
@@ -28,6 +30,16 @@ export const ProfileMain = () => {
         loadAuroraAccounts();
         loadProfile();
     }, []);
+
+    const handleClick = async (e: any) => {
+        const boardType = e.currentTarget.dataset.board;
+        const logout = await auroraLogout(boardType);
+
+        if(logout) {
+            // logout should return the updated accounts
+            setAuroraAccounts(logout);
+        }
+    }
 
 
     if(isLoading) {
@@ -67,7 +79,8 @@ export const ProfileMain = () => {
                                     <h3>Tension Board</h3>
                                     <div className="flex gap-4 items-center font-new-science">
                                         <p className="w-1/5 bg-white flex justify-center py-2 rounded ">{auroraAccounts.tensionBoard}</p>
-                                        <span className="w-2/5 bg-white flex justify-center py-2 rounded font-bold hover:text-white hover:bg-charcoal hover:cursor-pointer">Disconnect</span>
+                                        <button onClick={handleClick} data-board="tensionBoard" className="w-2/5 bg-white flex justify-center py-2 rounded font-bold hover:text-white hover:bg-charcoal hover:cursor-pointer">Disconnect</button>
+                                        
                                     </div>
                                 </div>
                             )

@@ -37,6 +37,7 @@ func main() {
 	r.POST("/profileInit", middlewares.CheckAuth, controllers.InitializeProfile)
 	r.POST("/aurora/login", middlewares.CheckAuth, controllers.BoardLogin)
 	r.GET("/aurora/accounts", middlewares.CheckAuth, controllers.GetAuroraAccounts)
+	r.POST("/aurora/logout", middlewares.CheckAuth, controllers.AuroraLogout)
 
 	r.Run()
 }
