@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"the-approach/backend/api"
 	"the-approach/backend/initializers"
@@ -104,7 +103,6 @@ func GetAuroraAccounts(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userAccounts.BoardInformation)
 	var boardUsers struct {
 		TensionBoard     string `json:"tensionBoard"`
 		GrasshopperBoard string `json:"grasshopperBoard"`
