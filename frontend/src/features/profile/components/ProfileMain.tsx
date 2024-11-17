@@ -64,9 +64,6 @@ export const ProfileMain = () => {
                             <p>Max Pull: {profileInformation.user.profileInformation.maxPull}</p>
                             <p>Climbing Since: {profileInformation.user.profileInformation.experience}</p>
                             <p>Favorite Crag/Gym: {profileInformation.user.profileInformation.favLocation}</p>
-                            
-
-                            
                         </div>
                     </div>
                 ) : <div>Loading...</div>
