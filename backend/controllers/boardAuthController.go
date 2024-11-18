@@ -116,36 +116,6 @@ func GetAuroraAccounts(c *gin.Context) {
 	c.JSON(http.StatusOK, boardUsers)
 }
 
-func GetAuroraAccount(board string, c *gin.Context) {
-	user, exists := c.Get("currentUser")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
-		return
-	}
-
-	currentUser, ok := user.(models.User)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user type"})
-		return
-	}
-
-	client, err := initializers.ConnectDatabase()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	users := client.Database("the-approach").Collection("users")
-
-	var userAccounts models.User
-
-	err = users.FindOne(c, bson.D{{"email", currentUser.Email}}).Decode(&userAccounts)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-}
-
 func AuroraLogout(c *gin.Context) {
 	user, exists := c.Get("currentUser")
 	if !exists {

@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"the-approach/backend/api"
 	"the-approach/backend/initializers"
 	"the-approach/backend/models"
 
@@ -15,18 +16,13 @@ func AscentsSync(c *gin.Context) {
 	var board struct {
 		Board string `json:"board"`
 	}
+
 	if err := c.ShouldBindJSON(&board); err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	var AuroraAccount = GetAuroraAccount(board.Board, c)
 
-	var auroraInput models.AscentsSync
-
-}
-
-func GetAuroraAccount(board string, c *gin.Context) {
 	user, exists := c.Get("currentUser")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
@@ -54,13 +50,21 @@ func GetAuroraAccount(board string, c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	switch board {
+	var auroraAccount models.AuroraUser
+	switch board.Board {
 	case "tensionboardapp2":
-		return userAccounts.BoardInformation.TensionBoard
+		auroraAccount = userAccounts.BoardInformation.TensionBoard
 	case "grasshopperboard":
-		return userAccounts.BoardInformation.GrasshopperBoard
+		auroraAccount = userAccounts.BoardInformation.GrasshopperBoard
 	case "kilterboard":
-		return userAccounts.BoardInformation.KilterBoard
+		auroraAccount = userAccounts.BoardInformation.KilterBoard
 	}
+
+	err = api.AuroraAscentsSync(board.Board, auroraAccount)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Ascents synced successfully"})
 }
