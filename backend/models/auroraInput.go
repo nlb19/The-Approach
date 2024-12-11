@@ -13,7 +13,7 @@ type AscentsSync struct {
 		ManagesPowerResponsibly  int `json:"manages_power_responsibly"`
 		Ufd                      int `json:"ufd"`
 	} `json:"client"`
-	Get struct {
+	GET struct {
 		Query struct {
 			Syncs struct {
 				SharedSyncs []interface{} `json:"shared_syncs"`
@@ -26,8 +26,42 @@ type AscentsSync struct {
 			IncludeNullClimbStats   int      `json:"include_null_climb_stats"`
 		} `json:"query"`
 	} `json:"GET"`
-	Put struct {
+	PUT struct {
 		Walls            []interface{} `json:"walls"`
 		WallExpungements []interface{} `json:"wall_expungements"`
 	} `json:"PUT"`
+}
+
+type AuroraSyncResponse struct {
+	PUT PutResponse `json:"PUT"`
+}
+
+type PutResponse struct {
+	Ascents   []AscentData `json:"ascents"`
+	UserSyncs []UserSync   `json:"user_syncs"`
+}
+
+type AscentData struct {
+	UUID        string  `json:"uuid"`
+	WallUUID    *string `json:"wall_uuid"`
+	ClimbUUID   string  `json:"climb_uuid"`
+	Angle       int     `json:"angle"`
+	IsMirror    bool    `json:"is_mirror"`
+	UserID      int     `json:"user_id"`
+	AttemptID   int     `json:"attempt_id"`
+	BidCount    int     `json:"bid_count"`
+	Quality     int     `json:"quality"`
+	Difficulty  int     `json:"difficulty"`
+	IsBenchmark bool    `json:"is_benchmark"`
+	IsListed    bool    `json:"is_listed"`
+	Comment     string  `json:"comment"`
+	ClimbedAt   string  `json:"climbed_at"`
+	CreatedAt   string  `json:"created_at"`
+	UpdatedAt   string  `json:"updated_at"`
+}
+
+type UserSync struct {
+	UserID             int    `json:"user_id"`
+	TableName          string `json:"table_name"`
+	LastSynchronizedAt string `json:"last_synchronized_at"`
 }
