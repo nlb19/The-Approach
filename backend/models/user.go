@@ -7,7 +7,9 @@ type User struct {
 	Password           string                  `json:"password"`
 	ProfileInformation ProfileInformationInput `json:"profileInformation"`
 	BoardInformation   BoardInformationInput   `json:"boardInformation"`
+	Sessions           []Session               `json:"sessions"`
 }
+
 type ProfileInformation struct {
 	Email              string                  `json:"email"`
 	ProfileInformation ProfileInformationInput `json:"profileInformation"`

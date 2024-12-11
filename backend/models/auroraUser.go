@@ -23,7 +23,7 @@ type ResLogin struct {
 	CreatedAt string `json:"created_at"`
 }
 
-type ApiResponse struct {
+type LoginApiResponse struct {
 	Token    string   `json:"token"`
 	UserID   int      `json:"user_id"`
 	Username string   `json:"username"`
