@@ -122,7 +122,7 @@ func ConvertAscentToSession(ascent models.AscentData, board string) models.Board
 	return models.BoardProblem{
 		BoardName:   board,
 		ProblemUUID: ascent.UUID,
-		BoulderName: ascent.ClimbUUID,
+		BoulderName: api.AuroraGetClimbName(board, ascent.ClimbUUID, strconv.Itoa(ascent.Angle)),
 		Grade:       strconv.Itoa(ascent.Difficulty),
 		Attempts:    ascent.BidCount,
 		Quality:     ascent.Quality,

@@ -7,9 +7,12 @@ import (
 	"io"
 	"net/http"
 	"net/http/httputil"
+	"strings"
 	"the-approach/backend/models"
 	"the-approach/backend/utils"
 	"time"
+
+	"golang.org/x/net/html"
 )
 
 func AuroraLogin(loginInfo models.BoardLogin) (user models.AuroraUser, err error) {
@@ -140,4 +143,57 @@ func AuroraAscentsSync(board string, user models.AuroraUser) (syncResponse model
 
 	return syncResponse, nil
 
+}
+
+func AuroraGetClimbName(board string, climbUUID string, angle string) string {
+	fmt.Printf("Attempting to get climb name for UUID = %s: %s\n", climbUUID, board)
+
+	url := fmt.Sprintf("https://%s.com/climbs/%s", board, climbUUID)
+
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConns:       10,
+			IdleConnTimeout:    90 * time.Second,
+			DisableCompression: true,
+			DisableKeepAlives:  false,
+			MaxConnsPerHost:    10,
+			ForceAttemptHTTP2:  true,
+		},
+	}
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return ""
+	}
+	q := req.URL.Query()
+	q.Add("angle", angle)
+
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return ""
+	}
+	defer resp.Body.Close()
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return ""
+	}
+
+	var title string
+	var findTitle func(*html.Node)
+	findTitle = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "title" && n.FirstChild != nil {
+			title = n.FirstChild.Data
+			return
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			findTitle(c)
+		}
+	}
+
+	findTitle(doc)
+	return strings.TrimSpace(title)
 }
