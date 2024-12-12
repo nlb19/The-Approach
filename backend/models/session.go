@@ -72,42 +72,42 @@ type WarmUp struct {
 }
 
 type BoulderProblem struct {
-	BoulderName string `json:"BoulderName"`
-	Grade       string `json:"grade"` // can be any grade
-	Attempts    int    `json:"attempts"`
-	IsRepeat    bool   `json:"isRepeat"`
-	Quality     int    `json:"quality"` // 1-10 (aurora is 1, 2, 3 => 1, 5, 10)
-	Style       string `json:"style"`
-	Comment     string `json:"comment"`   // any additional notes
-	RockType    string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
-	WallAngle   string `json:"wallAngle"` // in degrees
-	TimeStamp   string `json:"timestamp"`
+	BoulderName *string  `json:"BoulderName"`
+	Grade       string   `json:"grade"` // can be any grade
+	Attempts    int      `json:"attempts"`
+	IsRepeat    bool     `json:"isRepeat"`
+	Quality     *int     `json:"quality"` // 1-10 (aurora is 1, 2, 3 => 1, 5, 10)
+	Style       *string  `json:"style"`
+	Comment     string   `json:"comment"`   // any additional notes
+	RockType    []string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
+	WallAngle   string   `json:"wallAngle"` // in degrees
+	TimeStamp   string   `json:"timestamp"`
 }
 
 type Route struct {
-	RouteName string `json:"RouteName"`
-	Grade     string `json:"grade"` // can be any grade
-	Attempts  int    `json:"attempts"`
-	Quality   int    `json:"quality"`
-	Style     string `json:"style"`
-	Comment   string `json:"comment"`   // any additional notes
-	RockType  string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
-	WallAngle string `json:"wallAngle"` // in degrees
-	TimeStamp string `json:"timestamp"`
+	RouteName string   `json:"RouteName"`
+	Grade     string   `json:"grade"` // can be any grade
+	Attempts  int      `json:"attempts"`
+	Quality   int      `json:"quality"`
+	Style     *string  `json:"style"`
+	Comment   string   `json:"comment"`   // any additional notes
+	RockType  []string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
+	WallAngle string   `json:"wallAngle"` // in degrees
+	TimeStamp string   `json:"timestamp"`
 }
 
 type BoardProblem struct {
-	BoardName   string `json:"BoardName"`
-	ProblemUUID string `json:"BoulderUUID"`
-	BoulderName string `json:"BoulderName"`
-	Grade       string `json:"grade"` // can be any grade
-	Attempts    int    `json:"attempts"`
-	Quality     int    `json:"quality"` // 1-10 (aurora is 1, 2, 3 => 1, 5, 10)
-	Style       string `json:"style"`
-	Comment     string `json:"comment"`   // any additional notes
-	RockType    string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
-	WallAngle   string `json:"wallAngle"` // in degrees
-	TimeStamp   string `json:"timestamp"`
+	BoardName   string   `json:"BoardName"`
+	ProblemUUID string   `json:"BoulderUUID"`
+	BoulderName string   `json:"BoulderName"`
+	Grade       string   `json:"grade"` // can be any grade
+	Attempts    int      `json:"attempts"`
+	Quality     int      `json:"quality"` // 1-10 (aurora is 1, 2, 3 => 1, 5, 10)
+	Style       string   `json:"style"`
+	Comment     string   `json:"comment"`   // any additional notes
+	RockType    []string `json:"rockType"`  // combination {"sandstone", "limestone", "granite", "quartzite", "basalt", "gneiss", "schist", "wood", "plastic", "other"}
+	WallAngle   string   `json:"wallAngle"` // in degrees
+	TimeStamp   string   `json:"timestamp"`
 }
 
 type Workouts struct {
@@ -130,8 +130,8 @@ type Session struct {
 	Setting      string   `json:"setting"`      // {"indoor", "outdoor", "home"}
 	Location     string   `json:"location"`     // Crag name, gym name, or "home"
 	Focus        string   `json:"focus"`        // {"endurance", "strength", "power", "technique", "rehab", "other"}
-	Intensity    int      `json:"intensity"`    // 1-10
-	Enjoyment    int      `json:"enjoyment"`    // 1-10
-	Satisfaction int      `json:"satisfaction"` // 1-10
+	Intensity    string   `json:"intensity"`    // 1-10
+	Enjoyment    string   `json:"enjoyment"`    // 1-10
+	Satisfaction string   `json:"satisfaction"` // 1-10
 	Workouts     Workouts `json:"workouts"`
 }
