@@ -71,6 +71,8 @@ func AscentsSync(c *gin.Context) {
 
 	var currentSession *models.Session
 	var lastAscentTime time.Time
+	var earliestAscentTime time.Time
+	var latestAscentTime time.Time
 	var sessions []models.Session
 	for _, ascent := range syncResponse.PUT.Ascents {
 		ascentTime, err := time.Parse("2006-01-02 15:04:05", ascent.ClimbedAt)
@@ -85,11 +87,15 @@ func AscentsSync(c *gin.Context) {
 			if currentSession != nil {
 				sessions = append(sessions, *currentSession)
 			}
+			// Reset time trackers for new session
+			earliestAscentTime = ascentTime // Set to current ascent time instead of zero
+			latestAscentTime = ascentTime   // Set to current ascent time instead of zero
 
+			duration := 0.0 // Will be updated as more ascents are added
 			currentSession = &models.Session{
-				Date:         ascentTime.Format("2006-01-02"),
-				Time:         ascentTime.Format("15:04:05"),
-				Duration:     "",
+				Date:         ascentTime.Format("2006-01-02"), // Use current ascent time
+				StartTime:    ascentTime.Format("15:04:05"),   // Use current ascent time
+				Duration:     strconv.Itoa(int(duration)),
 				Setting:      "indoor",
 				Location:     "",
 				Focus:        "",
@@ -100,6 +106,17 @@ func AscentsSync(c *gin.Context) {
 					BoardProblems: []models.BoardProblem{},
 				},
 			}
+		} else {
+			if ascentTime.Before(earliestAscentTime) {
+				earliestAscentTime = ascentTime
+				currentSession.Date = earliestAscentTime.Format("2006-01-02")
+				currentSession.StartTime = earliestAscentTime.Format("15:04:05")
+			}
+			if ascentTime.After(latestAscentTime) {
+				latestAscentTime = ascentTime
+			}
+			duration := latestAscentTime.Sub(earliestAscentTime).Minutes()
+			currentSession.Duration = strconv.Itoa(int(duration))
 		}
 
 		boardProblem := ConvertAscentToSession(c, ascent, board.Board)

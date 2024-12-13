@@ -62,7 +62,6 @@ func createIndexes(client *mongo.Client) error {
 			}
 		}
 
-		// Create index only if it doesn't exist
 		if !indexExists {
 			indexModel := mongo.IndexModel{
 				Keys:    bson.D{{"UUID", 1}},

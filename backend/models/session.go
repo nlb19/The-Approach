@@ -125,7 +125,7 @@ type Workouts struct {
 
 type Session struct {
 	Date         string   `json:"date"`
-	Time         string   `json:"time"`
+	StartTime    string   `json:"startTime"`
 	Duration     string   `json:"duration"`     // in minutes
 	Setting      string   `json:"setting"`      // {"indoor", "outdoor", "home"}
 	Location     string   `json:"location"`     // Crag name, gym name, or "home"
