@@ -102,7 +102,7 @@ func AscentsSync(c *gin.Context) {
 			}
 		}
 
-		boardProblem := ConvertAscentToSession(ascent, board.Board)
+		boardProblem := ConvertAscentToSession(c, ascent, board.Board)
 		currentSession.Workouts.BoardProblems = append(currentSession.Workouts.BoardProblems, boardProblem)
 		lastAscentTime = ascentTime
 	}
@@ -115,14 +115,14 @@ func AscentsSync(c *gin.Context) {
 		return
 	}
 	fmt.Println(string(jsonSessions))
-	c.JSON(http.StatusOK, gin.H{"message": "Ascents synced successfully"})
+	c.JSON(http.StatusOK, gin.H{"Ascents synced successfully": string(jsonSessions)})
 }
 
-func ConvertAscentToSession(ascent models.AscentData, board string) models.BoardProblem {
+func ConvertAscentToSession(c *gin.Context, ascent models.AscentData, board string) models.BoardProblem {
 	return models.BoardProblem{
 		BoardName:   board,
 		ProblemUUID: ascent.UUID,
-		BoulderName: api.AuroraGetClimbName(board, ascent.ClimbUUID, strconv.Itoa(ascent.Angle)),
+		BoulderName: GetClimbName(c, ascent, board),
 		Grade:       strconv.Itoa(ascent.Difficulty),
 		Attempts:    ascent.BidCount,
 		Quality:     ascent.Quality,
@@ -131,4 +131,35 @@ func ConvertAscentToSession(ascent models.AscentData, board string) models.Board
 		WallAngle:   strconv.Itoa(ascent.Angle),
 		TimeStamp:   ascent.ClimbedAt,
 	}
+}
+
+func GetClimbName(c *gin.Context, ascent models.AscentData, board string) (climbName string) {
+	client, err := initializers.ConnectDatabase()
+	if err != nil {
+		return ""
+	}
+	collectionName := map[string]string{
+		"tensionboardapp2": "tensionClimbs",
+		"grasshopperboard": "grasshopperClimbs",
+		"kilterboard":      "kilterClimbs",
+	}[board]
+
+	if collectionName == "" {
+		return ""
+	}
+
+	boardClimbs := client.Database("the-approach").Collection(collectionName)
+
+	var climb models.BoardClimb
+	err = boardClimbs.FindOne(c, bson.D{{"UUID", ascent.ClimbUUID}}).Decode(&climb)
+	if err != nil {
+		climbName = api.AuroraGetClimbName(board, ascent.ClimbUUID, strconv.Itoa(ascent.Angle))
+		if climbName != "" {
+			boardClimbs.InsertOne(c, bson.D{{"UUID", ascent.ClimbUUID}, {"Name", climbName}})
+		}
+	} else {
+		climbName = climb.Name
+	}
+
+	return climbName
 }
