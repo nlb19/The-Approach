@@ -63,7 +63,7 @@ func AscentsSync(c *gin.Context) {
 		auroraAccount = userAccounts.BoardInformation.KilterBoard
 	}
 	var syncResponse models.AuroraSyncResponse
-	syncResponse, err = api.AuroraAscentsSync(board.Board, auroraAccount)
+	syncResponse, err = api.AuroraSync(board.Board, auroraAccount)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -119,7 +119,7 @@ func AscentsSync(c *gin.Context) {
 			currentSession.Duration = strconv.Itoa(int(duration))
 		}
 
-		boardProblem := ConvertAscentToSession(c, ascent, board.Board)
+		boardProblem := ConvertAscentToBoardProblem(c, ascent, board.Board)
 		currentSession.Workouts.BoardProblems = append(currentSession.Workouts.BoardProblems, boardProblem)
 		lastAscentTime = ascentTime
 	}
@@ -135,11 +135,12 @@ func AscentsSync(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Ascents synced successfully": string(jsonSessions)})
 }
 
-func ConvertAscentToSession(c *gin.Context, ascent models.AscentData, board string) models.BoardProblem {
+func ConvertAscentToBoardProblem(c *gin.Context, ascent models.AscentData, board string) models.BoardProblem {
 	return models.BoardProblem{
 		BoardName:   board,
-		ProblemUUID: ascent.UUID,
-		BoulderName: GetClimbName(c, ascent, board),
+		IsAscent:    true,
+		UUID:        ascent.UUID,
+		BoulderName: GetClimbName(c, ascent.UUID, strconv.Itoa(ascent.Angle), board),
 		Grade:       strconv.Itoa(ascent.Difficulty),
 		Attempts:    ascent.BidCount,
 		Quality:     ascent.Quality,
@@ -149,8 +150,23 @@ func ConvertAscentToSession(c *gin.Context, ascent models.AscentData, board stri
 		TimeStamp:   ascent.ClimbedAt,
 	}
 }
+func ConvertAttemptToBoardProblem(c *gin.Context, attempt models.BidData, board string) models.BoardProblem {
+	return models.BoardProblem{
+		BoardName:   board,
+		IsAscent:    false,
+		UUID:        attempt.UUID,
+		BoulderName: GetClimbName(c, attempt.UUID, strconv.Itoa(attempt.Angle), board),
+		Grade:       "",
+		Attempts:    attempt.BidCount,
+		Quality:     -1,
+		Comment:     attempt.Comment,
+		RockType:    []string{"plastic", "wood"},
+		WallAngle:   strconv.Itoa(attempt.Angle),
+		TimeStamp:   attempt.ClimbedAt,
+	}
+}
 
-func GetClimbName(c *gin.Context, ascent models.AscentData, board string) (climbName string) {
+func GetClimbName(c *gin.Context, climbUUID string, angle string, board string) (climbName string) {
 	client, err := initializers.ConnectDatabase()
 	if err != nil {
 		return ""
@@ -168,11 +184,11 @@ func GetClimbName(c *gin.Context, ascent models.AscentData, board string) (climb
 	boardClimbs := client.Database("the-approach").Collection(collectionName)
 
 	var climb models.BoardClimb
-	err = boardClimbs.FindOne(c, bson.D{{"UUID", ascent.ClimbUUID}}).Decode(&climb)
+	err = boardClimbs.FindOne(c, bson.D{{"UUID", climbUUID}}).Decode(&climb)
 	if err != nil {
-		climbName = api.AuroraGetClimbName(board, ascent.ClimbUUID, strconv.Itoa(ascent.Angle))
+		climbName = api.AuroraGetClimbName(board, climbUUID, angle)
 		if climbName != "" {
-			boardClimbs.InsertOne(c, bson.D{{"UUID", ascent.ClimbUUID}, {"Name", climbName}})
+			boardClimbs.InsertOne(c, bson.D{{"UUID", climbUUID}, {"Name", climbName}})
 		}
 	} else {
 		climbName = climb.Name

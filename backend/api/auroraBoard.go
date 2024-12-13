@@ -53,7 +53,7 @@ func AuroraLogin(loginInfo models.BoardLogin) (user models.AuroraUser, err error
 	return user, nil
 }
 
-func AuroraAscentsSync(board string, user models.AuroraUser) (syncResponse models.AuroraSyncResponse, err error) {
+func AuroraSync(board string, user models.AuroraUser) (syncResponse models.AuroraSyncResponse, err error) {
 	fmt.Printf("Attempting sync for board: %s\n", board)
 
 	url := fmt.Sprintf("https://api.%s.com/v1/sync", board)
@@ -74,7 +74,7 @@ func AuroraAscentsSync(board string, user models.AuroraUser) (syncResponse model
 	auroraInput.GET.Query.Syncs.SharedSyncs = []interface{}{}
 	auroraInput.GET.Query.Syncs.UserSyncs = []interface{}{}
 
-	auroraInput.GET.Query.Tables = []string{"ascents"}
+	auroraInput.GET.Query.Tables = []string{"ascents", "bids"}
 	auroraInput.GET.Query.UserId = user.UserID
 	auroraInput.GET.Query.IncludeMultiframeClimbs = 1
 	auroraInput.GET.Query.IncludeAllBetaLinks = 1

@@ -38,9 +38,23 @@ type AuroraSyncResponse struct {
 
 type PutResponse struct {
 	Ascents   []AscentData `json:"ascents"`
+	Bids      []BidData    `json:"bids"`
 	UserSyncs []UserSync   `json:"user_syncs"`
 }
 
+type BidData struct {
+	UUID      string `json:"uuid"`
+	UserID    int    `json:"user_id"`
+	ClimbUUID string `json:"climb_uuid"`
+	Angle     int    `json:"angle"`
+	IsMirror  bool   `json:"is_mirror"`
+	BidCount  int    `json:"bid_count"`
+	IsListed  bool   `json:"is_listed"`
+	Comment   string `json:"comment"`
+	ClimbedAt string `json:"climbed_at"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+}
 type AscentData struct {
 	UUID        string  `json:"uuid"`
 	WallUUID    *string `json:"wall_uuid"`

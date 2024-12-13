@@ -98,7 +98,8 @@ type Route struct {
 
 type BoardProblem struct {
 	BoardName   string   `json:"BoardName"`
-	ProblemUUID string   `json:"BoulderUUID"`
+	IsAscent    bool     `json:"isAscent"`
+	UUID        string   `json:"UUID"`
 	BoulderName string   `json:"BoulderName"`
 	Grade       string   `json:"grade"` // can be any grade
 	Attempts    int      `json:"attempts"`
